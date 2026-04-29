@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Persona Research & Consulting - Triple Analogy (Auto-Next Mode)</title>
+    <style>
+        :root {
+            --midnight: #0a192f;
+            --gold: #c5a059;
+            --ivory: #fdfcf9;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+        }
+
+        /* SECURITY & BASE */
+        * { box-sizing: border-box; transition: all 0.2s ease; -webkit-user-select: none; user-select: none; }
+        body { background-color: var(--ivory); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; }
+
+        /* AUTH SECTION */
+        .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle, #112240 0%, #0a192f 100%); }
+        .auth-card { background: var(--white); padding: 40px; border-radius: 16px; text-align: center; width: 100%; max-width: 450px; border-top: 10px solid var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .brand-full { font-size: 20px; font-weight: 800; color: var(--midnight); text-transform: uppercase; letter-spacing: 1px; }
+        .brand-sub { font-size: 11px; letter-spacing: 3px; color: var(--gold); margin-bottom: 30px; font-weight: 600; }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; outline: none; -webkit-user-select: text; user-select: text; }
+        .btn-gold { width: 100%; padding: 16px; background: var(--gold); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* HEADER */
+        header { background: var(--midnight); padding: 15px 25px; border-bottom: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; color: white; }
+        
+        /* QUIZ LAYOUT */
+        .container { max-width: 1200px; margin: 25px auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 0 15px; }
+        .quiz-box { flex: 1; min-width: 320px; background: var(--white); padding: 35px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .q-label { color: var(--gold); font-size: 11px; font-weight: 800; margin-bottom: 10px; letter-spacing: 2px; }
+        .q-text { font-size: 22px; font-weight: 700; margin-bottom: 30px; color: var(--midnight); text-transform: uppercase; line-height: 1.4; }
+
+        .option { padding: 16px 20px; border: 1.5px solid var(--border); margin-bottom: 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; font-weight: 600; }
+        .opt-label { width: 30px; height: 30px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: 800; font-size: 12px; border: 1px solid var(--border); }
+        .option.active { background: var(--midnight); color: var(--gold); border-color: var(--gold); transform: translateX(5px); }
+        .option.active .opt-label { background: var(--gold); color: var(--midnight); }
+
+        /* SIDEBAR NAV */
+        .sidebar { width: 100%; max-width: 320px; }
+        .nav-panel { background: var(--white); padding: 25px; border-radius: 12px; border: 1px solid var(--border); }
+        .grid-50 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .dot { height: 38px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); font-size: 11px; cursor: pointer; border-radius: 6px; font-weight: 700; }
+        .dot.current { background: var(--gold); color: white; border: none; }
+        .dot.filled { background: #f1f5f9; color: var(--midnight); border-color: var(--midnight); }
+
+        /* RESULT AREA */
+        #page-res { display: none; background: var(--white); max-width: 850px; margin: 30px auto; padding: 50px 20px; text-align: center; border-radius: 20px; border: 1px solid var(--border); }
+        .score-box { background: #f8fafc; padding: 40px; border-radius: 20px; margin-bottom: 30px; display: inline-block; min-width: 350px; border: 1px solid var(--border); }
+        .score-big { font-size: 110px; font-weight: 900; color: var(--midnight); line-height: 1; }
+        .pembahasan-card { text-align: left; background: #f8fafc; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--midnight); border-radius: 8px; font-size: 14px; }
+
+        @media (max-width: 768px) { .container { flex-direction: column; } .sidebar { max-width: 100%; } }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body oncontextmenu="return false;" onkeydown="return (event.keyCode != 123)">
+
+<div id="view-auth" class="auth-wrapper">
+    <div class="auth-card">
+        <div class="brand-full">Persona Research & Consulting</div>
+        <div class="brand-sub">Advanced Triple Analogy Assessment</div>
+        <input type="text" id="userName" placeholder="NAMA LENGKAP PESERTA">
+        <button class="btn-gold" onclick="startTest()">MULAI TES</button>
+    </div>
+</div>
+
+<div id="view-test" style="display:none;">
+    <header>
+        <div class="header-brand">PERSONA RESEARCH & CONSULTING</div>
+        <div id="timer" style="font-size: 24px; font-weight: 800; color: var(--gold);">45:00</div>
+    </header>
+    <div class="container">
+        <div class="quiz-box">
+            <div id="q-label" class="q-label"></div>
+            <div id="q-body" class="q-text"></div>
+            <div id="q-options"></div>
+        </div>
+        <div class="sidebar">
+            <div class="nav-panel">
+                <p style="font-size: 10px; font-weight: 800; margin-bottom: 15px;">STATUS JAWABAN (50)</p>
+                <div id="nav-dots" class="grid-50"></div>
+                <button class="btn-gold no-print" style="margin-top: 25px; background: var(--midnight);" onclick="finalize()">SUBMIT FINISH</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="page-res">
+    <div class="brand-full">Persona Research & Consulting</div>
+    <div class="brand-sub">Analytical Report - Expert Level</div>
+    <div class="score-box">
+        <span class="score-big" id="final-score">0</span><span style="font-size:30px; color:var(--gold); font-weight:700;">/100</span>
+        <div id="score-raw" style="font-weight:700; margin-top:10px; color:#64748b;"></div>
+    </div>
+    <p id="res-name" style="font-size: 24px; font-weight: 800; text-transform: uppercase; color: var(--midnight); border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 5px;"></p>
+    <div id="discussion-list" style="margin-top: 30px; text-align: left; padding: 0 20px;"></div>
+    <button class="btn-gold no-print" style="width:250px" onclick="window.print()">UNDUH LAPORAN (PDF)</button>
+</div>
+
+<script>
+    let currentIdx = 0, userSelections = {}, questions = [];
+    const labels = ['A', 'B', 'C', 'D', 'E'];
+
+    const pool = [
+        { q: "TELUR : JENTIK : NYAMUK =", a: "Telur : Berudu : Katak", o: ["Ulat : Kepompong : Kupu-kupu", "Biji : Tunas : Pohon", "Bayi : Anak : Remaja", "Padi : Beras : Nasi"], r: "Siklus hidup dengan fase larva di air (Nyamuk/Katak)." },
+        { q: "SENTER : BATERAI : CAHAYA =", a: "Mobil : Bensin : Gerak", o: ["Radio : Listrik : Suara", "Kipas : Angin : Dingin", "Makanan : Manusia : Energi", "Telepon : Pulsa : Sinyal"], r: "Alat : Sumber Energi : Hasil Kerja Akhir." },
+        { q: "PELUKIS : KUAS : KANVAS =", a: "Petani : Cangkul : Sawah", o: ["Sopir : Mobil : Jalan", "Guru : Buku : Murid", "Dokter : Pasien : Obat", "Penulis : Ide : Kertas"], r: "Subjek : Alat Kerja : Media Kerja Utama." },
+        { q: "SISWA : BUKU : PERPUSTAKAAN =", a: "Nasabah : Uang : Bank", o: ["Dokter : Obat : Apotek", "Pedagang : Barang : Pasar", "Karyawan : Gaji : Kantor", "Suster : Pasien : Bangsal"], r: "Pelaku : Objek Kepentingan : Lokasi Formal." },
+        { q: "HUJAN : DINGIN : JAKET =", a: "Lapar : Lemas : Makan", o: ["Panas : Matahari : Topi", "Haus : Kering : Air", "Sakit : Dokter : Obat", "Malam : Gelap : Lampu"], r: "Sebab Fisik : Efek Tubuh : Solusi Pengaman." },
+        { q: "TELINGA : ANTING : PERHIASAN =", a: "Jari : Cincin : Aksesoris", o: ["Kaki : Sepatu : Alas", "Leher : Kalung : Emas", "Tangan : Jam : Waktu", "Hidung : Kacamata : Alat"], r: "Anggota Tubuh : Objek yang Dipasang : Klasifikasi Objek." },
+        { q: "INDONESIA : JAKARTA : RUPIAH =", a: "Jepang : Tokyo : Yen", o: ["Inggris : London : Dollar", "Malaysia : Kuala Lumpur : Ringgit", "Perancis : Paris : Euro", "Amerika : Washington : Dollar"], r: "Negara : Ibukota : Mata Uang Sah." },
+        { q: "KAYU : PAPAN : MEJA =", a: "Kapas : Benang : Baju", o: ["Besi : Baja : Jembatan", "Tepung : Adonan : Roti", "Semen : Pasir : Tembok", "Kertas : Buku : Rak"], r: "Bahan Mentah : Produk Setengah Jadi : Produk Jadi Akhir." },
+        { q: "SINGA : DAGING : KARNIVORA =", a: "Sapi : Rumput : Herbivora", o: ["Ayam : Biji : Omnivora", "Ular : Tikus : Reptil", "Kambing : Daun : Mamalia", "Harimau : Hutan : Predator"], r: "Hewan : Makanan Utama : Golongan Klasifikasi Makan." },
+        { q: "GIGI : KUNYAH : MULUT =", a: "Mata : Lihat : Kepala", o: ["Jari : Pegang : Tangan", "Paru : Napas : Dada", "Jantung : Pompa : Tubuh", "Kaki : Jalan : Bawah"], r: "Organ : Fungsi Utama : Bagian Tubuh Induk." },
+        { q: "REPTIL : ULAR : MELATA =", a: "Aves : Burung : Terbang", o: ["Mamalia : Paus : Renang", "Amfibi : Katak : Lompat", "Ikan : Hiu : Insang", "Serangga : Semut : Jalan"], r: "Klasifikasi : Contoh Hewan : Cara Bergerak Khas." },
+        { q: "MERAH : BERHENTI : RAMBU =", a: "Putih : Suci : Bendera", o: ["Kuning : Hati-hati : Jalan", "Hijau : Jalan : Marka", "Hitam : Duka : Pakaian", "Biru : Laut : Alam"], r: "Warna : Makna Simbolis : Media Simbol." },
+        { q: "POHON : BUAH : MANIS =", a: "Cabai : Biji : Pedas", o: ["Bunga : Wangi : Taman", "Akar : Kuat : Tanah", "Daun : Hijau : Klorofil", "Air : Jernih : Haus"], r: "Organisme : Bagian Hasil : Sifat Khas Hasil." },
+        { q: "PIANO : TEKAN : MUSIK =", a: "Gitar : Petik : Lagu", o: ["Drum : Pukul : Suara", "Biola : Gesek : Nada", "Seruling : Tiup : Udara", "Harmonika : Hisap : Bunyi"], r: "Alat Musik : Cara Memainkan : Output Seni." },
+        { q: "SUTRA : ULAT : KAIN =", a: "Susu : Sapi : Keju", o: ["Madu : Lebah : Obat", "Telur : Ayam : Lauk", "Daging : Kambing : Sate", "Kulit : Ular : Tas"], r: "Produk : Sumber Hayati : Produk Turunan." },
+        { q: "KOMPUTER : PROSESOR : OTAK =", a: "Mobil : Mesin : Jantung", o: ["Radio : Antena : Telinga", "Kamera : Lensa : Mata", "Pesawat : Sayap : Burung", "Lampu : Kabel : Saraf"], r: "Benda Buatan : Pusat Kendali : Analogi Organ Hidup." },
+        { q: "GANDUM : ROTI : OVEN =", a: "Tanah Liat : Keramik : Tanur", o: ["Beras : Nasi : Rice Cooker", "Daging : Steak : Grill", "Kayu : Lemari : Gergaji", "Besi : Pedang : Palu"], r: "Bahan Baku : Produk : Alat Pemanas Proses." },
+        { q: "MATAHARI : TERIK : SIANG =", a: "Bulan : Dingin : Malam", o: ["Lampu : Terang : Gelap", "Bintang : Jauh : Langit", "Hujan : Basah : Mendung", "Api : Panas : Bakar"], r: "Benda Langit : Sifat Fisik Dominan : Waktu Kejadian." },
+        { q: "MASINIS : KERETA : REL =", a: "Pilot : Pesawat : Udara", o: ["Nakhoda : Kapal : Dermaga", "Sopir : Bus : Terminal", "Pembalap : Motor : Sirkuit", "Nelayan : Perahu : Laut"], r: "Pengemudi : Kendaraan : Jalur Operasi." },
+        { q: "KERTAS : PENA : TULIS =", a: "Lantai : Sapu : Bersih", o: ["Dinding : Cat : Warna", "Piring : Sendok : Makan", "Kayu : Gergaji : Potong", "Tanah : Cangkul : Tanam"], r: "Media : Alat : Tujuan Aktivitas." },
+        { q: "RUMAH : ATAP : GENTENG =", a: "Mobil : Ban : Karet", o: ["Buku : Sampul : Kertas", "Meja : Kaki : Kayu", "Tubuh : Kepala : Rambut", "Pohon : Daun : Klorofil"], r: "Keseluruhan : Bagian Luar : Material Penutup." },
+        { q: "SABUN : BERSIH : MANDI =", a: "Pasta Gigi : Putih : Sikat", o: ["Shampoo : Wangi : Rambut", "Handuk : Kering : Usap", "Parfum : Harum : Pesta", "Obat : Sembuh : Minum"], r: "Alat : Manfaat Fisik : Kegiatan." },
+        { q: "KOREK : API : PANAS =", a: "Es : Salju : Dingin", o: ["Lampu : Cahaya : Terang", "Pisau : Tajam : Luka", "Gula : Manis : Kalori", "Cabai : Biji : Pedas"], r: "Pemicu : Hasil : Sifat Fisik." },
+        { q: "PADI : PETANI : DESA =", a: "Ikan : Nelayan : Laut", o: ["Barang : Pedagang : Pasar", "Emas : Penambang : Gunung", "Buku : Penulis : Kamar", "Surat : Kurir : Jalan"], r: "Komoditas : Profesi : Habitat Kerja Utama." },
+        { q: "SENAPAN : BURU : HUTAN =", a: "Jaring : Tangkap : Laut", o: ["Kamera : Potret : Studio", "Pena : Tulis : Buku", "Cangkul : Gali : Kebun", "Pisau : Potong : Dapur"], r: "Alat Utama : Fungsi : Lokasi." },
+        { q: "FILM : SUTRADARA : AKTOR =", a: "Musik : Komposer : Penyanyi", o: ["Buku : Penulis : Pembaca", "Berita : Wartawan : Editor", "Drama : Penulis : Penonton", "Masakan : Koki : Pelayan"], r: "Produk Seni : Konseptor : Eksekutor." },
+        { q: "MATA : KACAMATA : LIHAT =", a: "Telinga : Alat Bantu : Dengar", o: ["Kaki : Sepatu : Jalan", "Tangan : Sarung : Hangat", "Mulut : Masker : Bicara", "Hidung : Obat : Napas"], r: "Indra : Alat Koreksi : Fungsi Indra." },
+        { q: "BUMI : PLANET : TATA SURYA =", a: "Matahari : Bintang : Galaksi", o: ["Jawa : Pulau : Indonesia", "Bulan : Satelit : Angkasa", "Emas : Logam : Tambang", "Air : Benda Cair : Alam"], r: "Objek : Klasifikasi : Sistem Induk." },
+        { q: "TELUR : AYAM : UNGGAS =", a: "Berudu : Katak : Amfibi", o: ["Anak : Manusia : Mamalia", "Biji : Jati : Tumbuhan", "Larva : Lalat : Serangga", "Spora : Jamur : Fungi"], r: "Asal : Dewasa : Klasifikasi Biologis." },
+        { q: "SEMEN : BANGUNAN : KOKOH =", a: "Otot : Tubuh : Kuat", o: ["Baja : Jembatan : Panjang", "Kayu : Lemari : Antik", "Cat : Dinding : Indah", "Kaca : Jendela : Bening"], r: "Material Utama : Wadah : Sifat yang Diberikan." },
+        { q: "KAMUS : KATA : ARTI =", a: "Peta : Wilayah : Lokasi", o: ["Buku : Halaman : Cerita", "Koran : Berita : Fakta", "Jadwal : Waktu : Kegiatan", "Resep : Bahan : Cara"], r: "Sumber Referensi : Unit Isi : Informasi Target." },
+        { q: "LAPTOP : LISTRIK : BATERAI =", a: "Mobil : Bensin : Tangki", o: ["Jam : Gerak : Baterai", "Manusia : Energi : Makanan", "Lampu : Terang : Saklar", "Kamera : Foto : Memori"], r: "Perangkat : Sumber Energi : Tempat Penyimpan Energi." },
+        { q: "GURU : MURID : KELAS =", a: "Dokter : Pasien : Klinik", o: ["Penjual : Pembeli : Toko", "Mandor : Buruh : Proyek", "Pelatih : Atlet : Lapangan", "Komandan : Prajurit : Markas"], r: "Pemberi Jasa : Penerima Jasa : Tempat Pertemuan." },
+        { q: "KULIT : RABA : PANAS =", a: "Lidah : Kecap : Pahit", o: ["Hidung : Cium : Bau", "Mata : Pandang : Jauh", "Telinga : Dengar : Bising", "Tangan : Pegang : Kasar"], r: "Indra : Cara Kerja : Stimulus." },
+        { q: "PAHAT : PATUNG : SENIMAN =", a: "Jarum : Baju : Penjahit", o: ["Pena : Tulisan : Penulis", "Gergaji : Kursi : Tukang", "Sutil : Masakan : Koki", "Cangkul : Kebun : Petani"], r: "Alat : Hasil Karya : Profesi." },
+        { q: "HUJAN : PAYUNG : KERING =", a: "Panas : Topi : Teduh", o: ["Dingin : Selimut : Tidur", "Sakit : Obat : Sembuh", "Lapar : Nasi : Kenyang", "Gelap : Lampu : Terang"], r: "Fenomena Alam : Proteksi : Status Hasil." },
+        { q: "KERTAS : BUKU : RAK =", a: "Uang : Dompet : Saku", o: ["Baju : Gantungan : Toko", "Pakaian : Lemari : Kamar", "Sepatu : Kotak : Gudang", "Piring : Rak : Dapur"], r: "Satuan Kecil : Wadah : Lokasi Simpan Wadah." },
+        { q: "TELESKOP : BINTANG : JAUH =", a: "Mikroskop : Bakteri : Kecil", o: ["Kacamata : Tulisan : Kabur", "Kamera : Objek : Nyata", "Lensa : Cahaya : Fokus", "Kompas : Arah : Tersesat"], r: "Alat Bantu : Target : Sifat Target yang Membutuhkan Alat." },
+        { q: "KOMPOR : GAS : MASAK =", a: "Lampu : Listrik : Terang", o: ["Mesin : Oli : Jalan", "Solder : Timah : Patri", "Kipas : Baterai : Putar", "Mobil : Ban : Laju"], r: "Alat : Energi Utama : Fungsi Utama." },
+        { q: "SISWA : SERAGAM : SEKOLAH =", a: "Dokter : Jas : Rumah Sakit", o: ["Tentara : Seragam : Markas", "Karyawan : ID Card : Kantor", "Atlet : Jersey : Lapangan", "Polisi : Lencana : Jalan"], r: "Subjek : Atribut Identitas : Institusi." },
+        { q: "KAYU : ARANG : HITAM =", a: "Daun : Kering : Cokelat", o: ["Susu : Keju : Putih", "Emas : Cincin : Kuning", "Langit : Awan : Biru", "Darah : Luka : Merah"], r: "Bahan : Hasil Perubahan Alami : Warna Akhir." },
+        { q: "JAM : MENIT : DETIK =", a: "Tahun : Bulan : Hari", o: ["Kilometer : Meter : Centimeter", "Besar : Sedang : Kecil", "Lusin : Gross : Kodi", "Berat : Massa : Gram"], r: "Satuan Waktu : Hirarki Menurun." },
+        { q: "BUNGA : MAHKOTA : INDAH =", a: "Gunung : Puncak : Tinggi", o: ["Wajah : Mata : Cantik", "Burung : Bulu : Warna", "Mobil : Bodi : Mengkilap", "Buku : Sampul : Menarik"], r: "Benda : Bagian Tertinggi/Terluar : Karakteristik Utama." },
+        { q: "PISAU : TAJAM : POTONG =", a: "Api : Panas : Bakar", o: ["Jarum : Runcing : Tusuk", "Batu : Keras : Lempar", "Kapas : Lembut : Usap", "Air : Jernih : Minum"], r: "Benda : Sifat Fisik : Kemampuan Akibat Sifat." },
+        { q: "SINYAL : TELEPON : KOMUNIKASI =", a: "Oksigen : Paru : Respirasi", o: ["Jalan : Mobil : Transportasi", "Uang : Barang : Transaksi", "Ilmu : Buku : Edukasi", "Air : Keran : Irigasi"], r: "Input Esensial : Medium : Tujuan Sistem." },
+        { q: "AKAR : POHON : TANAH =", a: "Sauh : Kapal : Laut", o: ["Pondasi : Rumah : Bumi", "Rambut : Kepala : Kulit", "Ban : Mobil : Jalan", "Tiang : Bendera : Lapangan"], r: "Penambat : Badan Utama : Media Penambat." },
+        { q: "KERINGAT : OLAHRAGA : LELAH =", a: "Luka : Jatuh : Sakit", o: ["Ngantuk : Begadang : Lemas", "Pintar : Belajar : Ujian", "Kenyang : Makan : Nikmat", "Basah : Berenang : Segar"], r: "Output Fisik : Aktivitas : Rasa yang Timbul." },
+        { q: "KONTRAK : KERJA : TANDA TANGAN =", a: "Janji : Nikah : Mahar", o: ["Undang-undang : Hukum : Pengesahan", "Surat : Kirim : Perangko", "Buku : Baca : Pinjam", "Visi : Misi : Tujuan"], r: "Ikatan Formal : Bidang : Bukti Syarat Sah." },
+        { q: "MENDUNG : HUJAN : BASAH =", a: "Lapar : Makan : Kenyang", o: ["Haus : Minum : Segar", "Gelap : Lampu : Terang", "Belajar : Ujian : Lulus", "Marah : Teriak : Serak"], r: "Sinyal Awal : Kejadian : Akibat Akhir." },
+        { q: "PENULIS : BUKU : PERPUSTAKAAN =", a: "Pelukis : Gambar : Galeri", o: ["Petani : Padi : Lumbung", "Koki : Makanan : Meja", "Dokter : Resep : Apotek", "Penyanyi : Lagu : Radio"], r: "Pelaku : Hasil Karya : Tempat Eksibisi/Simpan Publik." }
+    ];
+
+    function startTest() {
+        // Logika password dihapus, hanya validasi nama
+        if(document.getElementById('userName').value.length > 2) {
+            questions = pool.sort(() => Math.random() - 0.5).map(q => ({
+                ...q, shuffled: [q.a, ...q.o].sort(() => Math.random() - 0.5)
+            }));
+            document.getElementById('view-auth').style.display = 'none';
+            document.getElementById('view-test').style.display = 'block';
+            render(); startTimer(2700);
+        } else { alert("Silakan masukkan nama lengkap peserta."); }
+    }
+
+    function render() {
+        const q = questions[currentIdx];
+        document.getElementById('q-label').innerText = `ITEM TRIPLE LOGIC ${currentIdx + 1} / 50`;
+        document.getElementById('q-body').innerText = q.q;
+        let h = "";
+        q.shuffled.forEach((opt, i) => {
+            h += `<div id="opt-${i}" class="option ${userSelections[currentIdx] === opt ? 'active' : ''}" onclick="pick('${opt}', ${i})"><div class="opt-label">${labels[i]}</div>${opt}</div>`;
+        });
+        document.getElementById('q-options').innerHTML = h;
+        updateGrid();
+    }
+
+    function pick(val, optIdx) {
+        userSelections[currentIdx] = val;
+        render();
+        setTimeout(() => {
+            if(currentIdx < 49) {
+                currentIdx++;
+                render();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }, 350);
+    }
+
+    function updateGrid() {
+        let h = "";
+        questions.forEach((_, i) => { 
+            h += `<div class="dot ${currentIdx === i ? 'current' : ''} ${userSelections[i] ? 'filled' : ''}" onclick="currentIdx=${i};render()">${i+1}</div>`; 
+        });
+        document.getElementById('nav-dots').innerHTML = h;
+    }
+
+    function startTimer(sec) {
+        const t = document.getElementById('timer');
+        const inv = setInterval(() => {
+            sec--; 
+            let m = Math.floor(sec/60), s = sec%60;
+            t.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if(sec <= 0) { clearInterval(inv); finalize(); }
+        }, 1000);
+    }
+
+    function finalize() {
+        if(!confirm('Kirim dan kunci semua jawaban?')) return;
+        document.getElementById('view-test').style.display = 'none';
+        document.getElementById('page-res').style.display = 'block';
+        let correct = 0;
+        let dHtml = "";
+        
+        questions.forEach((q, i) => {
+            const isOk = userSelections[i] === q.a;
+            if(isOk) correct++;
+            dHtml += `<div class="pembahasan-card">
+                <strong>SOAL ${i+1}: ${q.q}</strong><br>
+                <span style="color:${isOk?'#059669':'#dc2626'}; font-weight:bold;">Jawaban: ${userSelections[i] || 'TIDAK DIISI'}</span> | 
+                <span style="color:var(--midnight)">Kunci: ${q.a}</span>
+                <p style="margin-top:8px; color:#64748b; font-style:italic; border-top:1px dashed #ccc; pt-5">Analisis: ${q.r}</p>
+            </div>`;
+        });
+
+        const finalScore = Math.round((correct / 50) * 100);
+        document.getElementById('final-score').innerText = finalScore;
+        document.getElementById('score-raw').innerText = `HASIL: ${correct} BENAR DARI 50 ITEM`;
+        document.getElementById('res-name').innerText = document.getElementById('userName').value;
+        document.getElementById('discussion-list').innerHTML = dHtml;
+        window.scrollTo(0,0);
+    }
+</script>
+</body>
+</html>

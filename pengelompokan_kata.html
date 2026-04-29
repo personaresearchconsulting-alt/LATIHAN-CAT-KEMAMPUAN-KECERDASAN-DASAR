@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Persona Research & Consulting - Word Classification (Auto-Next)</title>
+    <style>
+        :root {
+            --midnight: #0a192f;
+            --gold: #c5a059;
+            --ivory: #fdfcf9;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+        }
+
+        /* SECURITY: Anti-Selection & Anti-Copy */
+        * { box-sizing: border-box; transition: all 0.2s ease; -webkit-user-select: none; user-select: none; }
+        body { background-color: var(--ivory); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; }
+
+        /* AUTH SECTION */
+        .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle, #112240 0%, #0a192f 100%); }
+        .auth-card { background: var(--white); padding: 40px; border-radius: 16px; text-align: center; width: 100%; max-width: 450px; border-top: 10px solid var(--gold); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .brand-full { font-size: 20px; font-weight: 800; color: var(--midnight); text-transform: uppercase; letter-spacing: 1px; }
+        .brand-sub { font-size: 11px; letter-spacing: 3px; color: var(--gold); margin-bottom: 30px; font-weight: 600; }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; outline: none; -webkit-user-select: text; user-select: text; }
+        .btn-gold { width: 100%; padding: 16px; background: var(--gold); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* HEADER */
+        header { background: var(--midnight); padding: 15px 25px; border-bottom: 3px solid var(--gold); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; color: white; }
+        
+        /* QUIZ LAYOUT */
+        .container { max-width: 1200px; margin: 25px auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 0 15px; }
+        .quiz-box { flex: 1; min-width: 320px; background: var(--white); padding: 35px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .q-label { color: var(--gold); font-size: 11px; font-weight: 800; margin-bottom: 10px; letter-spacing: 2px; }
+        .q-text { font-size: 20px; font-weight: 700; margin-bottom: 30px; color: var(--midnight); line-height: 1.4; }
+
+        .option { padding: 16px 20px; border: 1.5px solid var(--border); margin-bottom: 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; font-weight: 600; }
+        .opt-label { width: 30px; height: 30px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: 800; font-size: 12px; border: 1px solid var(--border); }
+        .option.active { background: var(--midnight); color: var(--gold); border-color: var(--gold); transform: translateX(5px); }
+        .option.active .opt-label { background: var(--gold); color: var(--midnight); }
+
+        /* SIDEBAR NAV */
+        .sidebar { width: 100%; max-width: 320px; }
+        .nav-panel { background: var(--white); padding: 25px; border-radius: 12px; border: 1px solid var(--border); }
+        .grid-50 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .dot { height: 38px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); font-size: 11px; cursor: pointer; border-radius: 6px; font-weight: 700; }
+        .dot.current { background: var(--gold); color: white; border: none; }
+        .dot.filled { background: #f1f5f9; color: var(--midnight); border-color: var(--midnight); }
+
+        /* RESULT AREA */
+        #page-res { display: none; background: var(--white); max-width: 850px; margin: 30px auto; padding: 50px 20px; text-align: center; border-radius: 20px; border: 1px solid var(--border); }
+        .score-box { background: #f8fafc; padding: 40px; border-radius: 20px; margin-bottom: 30px; display: inline-block; min-width: 350px; border: 1px solid var(--border); }
+        .score-big { font-size: 110px; font-weight: 900; color: var(--midnight); line-height: 1; }
+        .pembahasan-card { text-align: left; background: #f8fafc; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--midnight); border-radius: 8px; font-size: 14px; }
+
+        @media (max-width: 768px) { .container { flex-direction: column; } .sidebar { max-width: 100%; } }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body oncontextmenu="return false;" onkeydown="return (event.keyCode != 123)">
+
+<div id="view-auth" class="auth-wrapper">
+    <div class="auth-card">
+        <div class="brand-full">Persona Research & Consulting</div>
+        <div class="brand-sub">Word Classification Assessment</div>
+        <input type="text" id="userName" placeholder="NAMA LENGKAP ANDA">
+        <button class="btn-gold" onclick="startTest()">MULAI TES SEKARANG</button>
+    </div>
+</div>
+
+<div id="view-test" style="display:none;">
+    <header>
+        <div class="header-brand">PERSONA RESEARCH & CONSULTING</div>
+        <div id="timer" style="font-size: 24px; font-weight: 800; color: var(--gold);">20:00</div>
+    </header>
+    <div class="container">
+        <div class="quiz-box">
+            <div id="q-label" class="q-label"></div>
+            <div id="q-body" class="q-text"></div>
+            <div id="q-options"></div>
+        </div>
+        <div class="sidebar">
+            <div class="nav-panel">
+                <p style="font-size: 10px; font-weight: 800; margin-bottom: 15px;">LEMBAR JAWABAN (50)</p>
+                <div id="nav-dots" class="grid-50"></div>
+                <button class="btn-gold no-print" style="margin-top: 25px; background: var(--midnight);" onclick="finalize()">SELESAI & KIRIM</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="page-res">
+    <div class="brand-full">Persona Research & Consulting</div>
+    <div class="brand-sub">Official Assessment Results</div>
+    <div class="score-box">
+        <span class="score-big" id="final-score">0</span><span style="font-size:30px; color:var(--gold); font-weight:700;">/100</span>
+    </div>
+    <p id="res-name" style="font-size: 24px; font-weight: 800; text-transform: uppercase; color: var(--midnight); border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 5px;"></p>
+    <div id="discussion-list" style="margin-top: 30px; text-align: left; padding: 0 20px;"></div>
+    <button class="btn-gold no-print" style="width:250px" onclick="window.print()">SIMPAN LAPORAN (PDF)</button>
+</div>
+
+<script>
+    let currentIdx = 0, userSelections = {}, questions = [];
+    const labels = ['A', 'B', 'C', 'D', 'E'];
+
+    const pool = [
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Sawi", o: ["Mangga", "Apel", "Jeruk", "Pisang"], r: "Sawi adalah sayuran, sisanya adalah buah-buahan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Pena", o: ["Meja", "Kursi", "Lemari", "Tempat Tidur"], r: "Pena adalah alat tulis, sisanya adalah furnitur." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Ayam", o: ["Singa", "Harimau", "Serigala", "Macan"], r: "Ayam adalah unggas/herbivora-omnivora, sisanya adalah karnivora liar." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Cangkul", o: ["Bus", "Mobil", "Motor", "Sepeda"], r: "Cangkul adalah alat pertanian, sisanya adalah alat transportasi." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Matahari", o: ["Bumi", "Mars", "Jupiter", "Saturnus"], r: "Matahari adalah bintang, sisanya adalah planet." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Sepatu", o: ["Kemeja", "Kaos", "Celana", "Jas"], r: "Sepatu adalah alas kaki, sisanya adalah pakaian." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Sendok", o: ["Biola", "Gitar", "Piano", "Harpa"], r: "Sendok adalah alat makan, sisanya adalah alat musik." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Garam", o: ["Mawar", "Melati", "Anggrek", "Tulip"], r: "Garam adalah bumbu dapur, sisanya adalah jenis bunga." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Komputer", o: ["Dokter", "Guru", "Arsitek", "Pilot"], r: "Komputer adalah benda mati/alat, sisanya adalah profesi." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Rumah", o: ["Samudra", "Laut", "Sungai", "Danau"], r: "Rumah adalah bangunan, sisanya adalah bentang alam perairan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Besi", o: ["Oksigen", "Nitrogen", "Hidrogen", "Helium"], r: "Besi adalah logam/padat, sisanya adalah gas." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kucing", o: ["Paus", "Hiu", "Lumba-lumba", "Pari"], r: "Kucing adalah hewan darat, sisanya adalah hewan air." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Jakarta", o: ["Asia", "Eropa", "Afrika", "Amerika"], r: "Jakarta adalah kota, sisanya adalah nama benua." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kertas", o: ["Segitiga", "Persegi", "Lingkaran", "Trapesium"], r: "Kertas adalah benda, sisanya adalah bangun datar." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Lari", o: ["Merah", "Kuning", "Hijau", "Biru"], r: "Lari adalah kata kerja, sisanya adalah warna." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Mawar", o: ["Bayam", "Kangkung", "Sawi", "Brokoli"], r: "Mawar adalah bunga, sisanya adalah sayuran." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kulkas", o: ["Soto", "Sate", "Rendang", "Bakso"], r: "Kulkas adalah elektronik, sisanya adalah jenis makanan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Sereal", o: ["Teh", "Kopi", "Susu", "Jus"], r: "Sereal adalah makanan padat, sisanya adalah minuman." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Bulan", o: ["Senin", "Selasa", "Rabu", "Kamis"], r: "Bulan adalah penanggalan/satelit, sisanya adalah nama hari." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Botol", o: ["Cincin", "Kalung", "Gelang", "Anting"], r: "Botol adalah wadah, sisanya adalah perhiasan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Marah", o: ["Gitar", "Seruling", "Drum", "Terompet"], r: "Marah adalah emosi, sisanya adalah alat musik." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Buku", o: ["Bor", "Palu", "Obeng", "Tang"], r: "Buku adalah alat tulis/baca, sisanya adalah alat pertukangan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Piring", o: ["Melon", "Semangka", "Pepaya", "Durian"], r: "Piring adalah alat makan, sisanya adalah buah-buahan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Televisi", o: ["Sapi", "Kambing", "Kerbau", "Kuda"], r: "Televisi adalah elektronik, sisanya adalah hewan ternak." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Emas", o: ["Mata", "Telinga", "Hidung", "Mulut"], r: "Emas adalah logam mulia, sisanya adalah panca indra." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Gunung", o: ["Meja", "Kursi", "Lemari", "Rak"], r: "Gunung adalah alam, sisanya adalah furnitur kayu." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Madu", o: ["Kertas", "Pena", "Pensil", "Penghapus"], r: "Madu adalah makanan, sisanya adalah alat tulis." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Berenang", o: ["Melihat", "Mendengar", "Mencium", "Meraba"], r: "Berenang adalah aktivitas fisik aktif, sisanya adalah fungsi panca indra." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kunci", o: ["Januari", "Maret", "Mei", "Juli"], r: "Kunci adalah benda, sisanya adalah nama bulan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Sandal", o: ["Topi", "Peci", "Helm", "Baret"], r: "Sandal adalah alas kaki, sisanya adalah pelindung kepala." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Handuk", o: ["Sabun", "Shampo", "Pasta Gigi", "Sikat Gigi"], r: "Handuk adalah kain pengering, sisanya adalah bahan/alat pembersih tubuh langsung." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Awan", o: ["Soto", "Rawon", "Opor", "Gulai"], r: "Awan adalah fenomena langit, sisanya adalah makanan berkuah." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Obeng", o: ["Rupiah", "Dollar", "Yen", "Euro"], r: "Obeng adalah alat, sisanya adalah mata uang." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Merpati", o: ["Ular", "Buaya", "Kadal", "Kura-kura"], r: "Merpati adalah unggas, sisanya adalah reptil." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Bantal", o: ["Kompor", "Wajan", "Panci", "Sodet"], r: "Bantal adalah perlengkapan tidur, sisanya adalah alat masak." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Radio", o: ["Mawar", "Anggrek", "Dahlia", "Kamboja"], r: "Radio adalah elektronik, sisanya adalah jenis bunga." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Garpu", o: ["Catur", "Monopoli", "Ular Tangga", "Ludo"], r: "Garpu adalah alat makan, sisanya adalah jenis permainan papan." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Dompet", o: ["Harimau", "Singa", "Serigala", "Herder"], r: "Dompet adalah benda, sisanya adalah jenis hewan taring/karnivora." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Payung", o: ["Sosiologi", "Ekonomi", "Sejarah", "Geografi"], r: "Payung adalah benda, sisanya adalah bidang ilmu sosial." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Semen", o: ["Kopi", "Teh", "Susu", "Cokelat"], r: "Semen adalah bahan bangunan, sisanya adalah bahan minuman." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Langit", o: ["Kuning", "Hijau", "Merah", "Ungu"], r: "Langit adalah ruang angkasa, sisanya adalah warna." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Sapu", o: ["Biola", "Gitar", "Kecapi", "Sasando"], r: "Sapu adalah alat kebersihan, sisanya adalah alat musik petik/gesek." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Pintu", o: ["Bayam", "Kangkung", "Sawi", "Selada"], r: "Pintu adalah bagian rumah, sisanya adalah sayuran daun." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kipas", o: ["Duren", "Rambutan", "Salak", "Nangka"], r: "Kipas adalah alat, sisanya adalah buah berkulit kasar/tajam." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Bensin", o: ["Air", "Sirup", "Minyak", "Kecap"], r: "Bensin adalah bahan bakar, sisanya umumnya konsumsi rumah tangga." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kamera", o: ["Membaca", "Menulis", "Menghitung", "Menyimak"], r: "Kamera adalah benda, sisanya adalah kemampuan literasi." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kabel", o: ["Lari", "Lompat", "Lempar", "Jalan"], r: "Kabel adalah benda, sisanya adalah cabang atletik/gerak." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Tangga", o: ["Merah", "Putih", "Biru", "Hitam"], r: "Tangga adalah alat/bangunan, sisanya adalah warna." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Obat", o: ["Piring", "Gelas", "Mangkuk", "Cangkir"], r: "Obat adalah bahan medis, sisanya adalah alat makan/minum." },
+        { q: "Mana kata yang TIDAK termasuk dalam kelompoknya?", a: "Kertas", o: ["Badak", "Gajah", "Rusa", "Zebra"], r: "Kertas adalah benda, sisanya adalah mamalia herbivora." }
+    ];
+
+    function startTest() {
+        if(document.getElementById('userName').value.length > 2) {
+            questions = pool.sort(() => Math.random() - 0.5).map(q => ({
+                ...q, shuffled: [q.a, ...q.o].sort(() => Math.random() - 0.5)
+            }));
+            document.getElementById('view-auth').style.display = 'none';
+            document.getElementById('view-test').style.display = 'block';
+            render(); startTimer(1200);
+        } else { alert("Masukkan nama lengkap Anda."); }
+    }
+
+    function render() {
+        const q = questions[currentIdx];
+        document.getElementById('q-label').innerText = `ITEM WORD CLASSIFICATION ${currentIdx + 1} / 50`;
+        document.getElementById('q-body').innerText = q.q;
+        let h = "";
+        q.shuffled.forEach((opt, i) => {
+            h += `<div id="opt-${i}" class="option ${userSelections[currentIdx] === opt ? 'active' : ''}" onclick="pick('${opt}', ${i})"><div class="opt-label">${labels[i]}</div>${opt}</div>`;
+        });
+        document.getElementById('q-options').innerHTML = h;
+        updateGrid();
+    }
+
+    function pick(val, optIdx) {
+        userSelections[currentIdx] = val;
+        render();
+        setTimeout(() => {
+            if(currentIdx < 49) {
+                currentIdx++;
+                render();
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }, 350);
+    }
+
+    function updateGrid() {
+        let h = "";
+        questions.forEach((_, i) => { 
+            h += `<div class="dot ${currentIdx === i ? 'current' : ''} ${userSelections[i] ? 'filled' : ''}" onclick="currentIdx=${i};render()">${i+1}</div>`; 
+        });
+        document.getElementById('nav-dots').innerHTML = h;
+    }
+
+    function startTimer(sec) {
+        const t = document.getElementById('timer');
+        const inv = setInterval(() => {
+            sec--; 
+            let m = Math.floor(sec/60), s = sec%60;
+            t.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if(sec <= 0) { clearInterval(inv); finalize(); }
+        }, 1000);
+    }
+
+    function finalize() {
+        if(!confirm('Kirim jawaban sekarang?')) return;
+        document.getElementById('view-test').style.display = 'none';
+        document.getElementById('page-res').style.display = 'block';
+        let correct = 0;
+        let dHtml = "";
+        
+        questions.forEach((q, i) => {
+            const isOk = userSelections[i] === q.a;
+            if(isOk) correct++;
+            dHtml += `<div class="pembahasan-card">
+                <strong>SOAL ${i+1}</strong><br>
+                <span style="color:${isOk?'#059669':'#dc2626'}; font-weight:bold;">Jawaban Anda: ${userSelections[i] || 'TIDAK DIISI'}</span> | 
+                <span style="color:var(--midnight)">Kunci: ${q.a}</span>
+                <p style="margin-top:8px; color:#64748b; font-style:italic;">Analisis: ${q.r}</p>
+            </div>`;
+        });
+
+        const finalScore = Math.round((correct / 50) * 100);
+        document.getElementById('final-score').innerText = finalScore;
+        document.getElementById('res-name').innerText = document.getElementById('userName').value;
+        document.getElementById('discussion-list').innerHTML = dHtml;
+        window.scrollTo(0,0);
+    }
+</script>
+</body>
+</html>

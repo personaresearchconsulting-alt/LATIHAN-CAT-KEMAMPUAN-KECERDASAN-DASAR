@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Center — Persona Research & Consulting</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --midnight: #0a192f;
+            --gold: #c5a059;
+            --ivory: #fdfcf9;
+            --white: #ffffff;
+            --text: #0f172a;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-user-select: none; user-select: none; }
+        body { background: var(--ivory); color: var(--text); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+        .container { width: 100%; max-width: 500px; padding: 20px; }
+        .card { background: var(--white); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 5px solid var(--gold); text-align: center; }
+        
+        h1 { color: var(--midnight); font-size: 1.5rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        p { color: #64748b; font-size: 0.9rem; margin-bottom: 30px; }
+
+        .module-list { display: none; text-align: left; margin-top: 20px; }
+        .module-item { 
+            display: block; padding: 15px; margin-bottom: 10px; 
+            background: #f8fafc; border: 1px solid var(--border); 
+            border-radius: 8px; text-decoration: none; color: var(--midnight);
+            font-weight: 600; transition: 0.3s;
+        }
+        .module-item:hover { background: var(--midnight); color: var(--gold); transform: translateX(5px); }
+
+        input { 
+            width: 100%; padding: 12px; margin-bottom: 15px; 
+            border: 1px solid #e2e8f0; border-radius: 6px; outline: none; text-align: center;
+        }
+        button { 
+            width: 100%; padding: 12px; background: var(--midnight); 
+            color: var(--gold); border: none; border-radius: 6px; 
+            font-weight: bold; cursor: pointer; 
+        }
+        button:hover { opacity: 0.9; }
+        .error { color: #e74c3c; font-size: 0.8rem; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body oncontextmenu="return false">
+
+<div class="container">
+    <div class="card" id="auth-card">
+        <h1>Persona Research</h1>
+        <p>Silakan masukkan kode akses untuk memulai assessment.</p>
+        <input type="password" id="pass-input" placeholder="Masukkan Password">
+        <button onclick="verifyAccess()">MASUK</button>
+        <div id="err-msg" class="error">Akses Ditolak: Password salah atau limit device tercapai.</div>
+    </div>
+
+    <div class="card module-list" id="main-content">
+        <h1>Daftar Modul</h1>
+        <p>Pilih modul ujian di bawah ini:</p>
+        <a href="kecerdasan_4.html" class="module-item">1. CAT Kecerdasan HOTS</a>
+        <a href="analogi.html" class="module-item">2. Analogi Verbal</a>
+        <a href="analogi_deret_tiga.html" class="module-item">3. Triple Analogy</a>
+        <a href="antonim.html" class="module-item">4. Verbal Antonim</a>
+        <a href="sinonim.html" class="module-item">5. Sinonim Verbal</a>
+        <a href="pengelompokan_kata.html" class="module-item">6. Word Classification</a>
+        <a href="verbal_campuran.html" class="module-item">7. Verbal Mix Assessment</a>
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        ps: "pesona03",
+        maxDev: 3,
+        expiry: new Date("2026-05-06T23:59:59").getTime()
+    };
+
+    function verifyAccess() {
+        const input = document.getElementById('pass-input').value;
+        const errMsg = document.getElementById('err-msg');
+        const now = new Date().getTime();
+
+        // 1. Cek Expired
+        if (now > CONFIG.expiry) {
+            alert("Masa berlaku akses telah habis (Expired).");
+            return;
+        }
+
+        // 2. Cek Password
+        if (input === CONFIG.ps) {
+            // 3. Cek Device Limit via LocalStorage
+            let devices = JSON.parse(localStorage.getItem('_dev_registry') || "[]");
+            let currentFingerprint = navigator.userAgent + screen.width;
+
+            if (!devices.includes(currentFingerprint)) {
+                if (devices.length >= CONFIG.maxDev) {
+                    errMsg.innerText = "Limit akses device telah penuh.";
+                    errMsg.style.display = "block";
+                    return;
+                }
+                devices.push(currentFingerprint);
+                localStorage.setItem('_dev_registry', JSON.stringify(devices));
+            }
+
+            document.getElementById('auth-card').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } else {
+            errMsg.style.display = 'block';
+        }
+    }
+
+    // Anti Inspect Element Sederhana
+    document.onkeydown = function(e) {
+        if(event.keyCode == 123) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+    }
+</script>
+
+</body>
+</html>
